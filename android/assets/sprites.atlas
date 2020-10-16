@@ -1,0 +1,76 @@
+
+sprites.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+animals
+  rotate: false
+  xy: 2, 133
+  size: 200, 151
+  orig: 200, 151
+  offset: 0, 0
+  index: -1
+back
+  rotate: false
+  xy: 204, 358
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+cave
+  rotate: false
+  xy: 2, 629
+  size: 589, 295
+  orig: 589, 295
+  offset: 0, 0
+  index: -1
+fossil
+  rotate: false
+  xy: 2, 2
+  size: 200, 129
+  orig: 200, 129
+  offset: 0, 0
+  index: -1
+img-missing
+  rotate: false
+  xy: 204, 228
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ocean
+  rotate: false
+  xy: 2, 286
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+scuba
+  rotate: false
+  xy: 385, 491
+  size: 200, 136
+  orig: 200, 136
+  offset: 0, 0
+  index: -1
+shark
+  rotate: false
+  xy: 2, 488
+  size: 381, 139
+  orig: 381, 139
+  offset: 0, 0
+  index: -1
+start
+  rotate: false
+  xy: 593, 600
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+sub
+  rotate: false
+  xy: 593, 730
+  size: 300, 194
+  orig: 300, 194
+  offset: 0, 0
+  index: -1
