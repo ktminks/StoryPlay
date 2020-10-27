@@ -46,6 +46,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	List<ActionDef> actionsList;
 	SelectBox<ActionDef.ActionType> actionTypeSB;
 
+	Dialog exitDlg;
+	private boolean canExit = false;
+
 	@Override
 	public void create () {
 		// create the atlas for all our images
@@ -214,6 +217,36 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			t.add(actionTypeSB);
 			t.row().colspan(2);
 			t.add(actionParamsTbl);
+
+			exitDlg = new Dialog("Save to file and exit?", skin);
+			TextButton saveButton = new TextButton("Save", skin);
+			saveButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					storyPlay.saveToFile();
+					canExit = true;
+					Gdx.app.exit();
+				}
+			});
+			exitDlg.getButtonTable().add(saveButton);
+			TextButton exitButton = new TextButton("Don't Save", skin);
+			exitButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					canExit = true;
+					Gdx.app.exit();
+				}
+			});
+			exitDlg.getButtonTable().add(exitButton);
+			TextButton cancelButton = new TextButton("Cancel", skin);
+			cancelButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					exitDlg.hide();
+					Gdx.input.setInputProcessor(MyGdxGame.this);
+				}
+			});
+			exitDlg.getButtonTable().add(cancelButton);
 		}
 	}
 
@@ -241,11 +274,18 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void dispose () {
-		storyPlay.saveToFile();
-
 		// cleanup
 		stage.dispose();
 		atlas.dispose();
+	}
+
+	public boolean canExit() {
+		return canExit;
+	}
+
+	public void tryExit() {
+		actionsDlg.setModal(true);
+		exitDlg.show(stage);
 	}
 
 	@Override
