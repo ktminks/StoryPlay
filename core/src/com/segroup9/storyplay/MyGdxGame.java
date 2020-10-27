@@ -253,7 +253,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		if (designerMode) {
 			// play/stop storyplay from current page
-			if (keycode == Input.Keys.P) {
+			if (keycode == Input.Keys.SPACE) {
 				if (!storyPlay.isLive()) {
 					storyPlay.saveCurrentPage();	// save page before playing
 					desToolsTbl.setVisible(false);	// hide dev ui when playing
@@ -300,7 +300,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			if (selectedActor != null) {
 
 				// open dialog to edit actions for selected actor
-				if (keycode == Input.Keys.L) {
+				if (keycode == Input.Keys.P) {
 					actionsList.clearItems();
 					StoryActorDef actorDef = ((StoryActorDef)selectedActor.getUserObject());
 					if (actorDef != null) {
