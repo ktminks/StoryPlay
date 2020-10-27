@@ -8,6 +8,8 @@ public class BuildAssets {
         settings.filterMin = Texture.TextureFilter.Linear;
         settings.filterMag = Texture.TextureFilter.Linear;
         TexturePacker.process( settings,
-                "desktop/assets-raw/", "android/assets/", "sprites.atlas" );
+                "desktop/assets-raw/gfx", "android/assets/", "sprites.atlas" );
+        TexturePacker.process( settings,
+                "desktop/assets-raw/skin", "android/assets/", "uiskin.atlas" );
     }
 }
