@@ -48,11 +48,11 @@ SliderStyle: {
 },
 LabelStyle: {
 	default: { font: default-font, fontColor: white },
-	place-holder: { font: font-export, fontColor: white, background: textfield },
+	place-holder: { font: font-export, fontColor: white, background: default-rect },
 },
 TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor },
-	narration: { selection: selection, font: default-font, fontColor: white, cursor: cursor }
+	narration: { selection: selection, font: font-export, fontColor: white, cursor: cursor }
 },
 CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }

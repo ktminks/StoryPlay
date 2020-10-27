@@ -9,9 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -55,12 +53,23 @@ public class StoryPlay extends Group {
 
         // load page actors to stage and initialize
         for (final StoryActorDef actorDef : page.actorDefs) {
+            Actor actor;
             TextureAtlas.AtlasRegion reg = textureAtlas.findRegion(actorDef.imageName);
             if (reg == null) {
                 System.out.println("Image missing!: " + actorDef.imageName);
                 reg = textureAtlas.findRegion("img-missing");
             }
-            Image actor = new Image(reg);
+
+            if ("".equals(actorDef.text) || actorDef.text == null)
+                actor = new Image(reg);
+            else {
+                Label txt = new Label(actorDef.text, skin, "place-holder");
+                txt.setAlignment(Align.center);
+                txt.setWrap(true);
+                txt.setWidth(200);
+                actor = txt;
+            }
+
             actor.setUserObject(actorDef);
             actor.setOrigin(Align.center); // center actor origin (default is lower left corner)
             actor.setName(actorDef.imageName);
@@ -76,7 +85,7 @@ public class StoryPlay extends Group {
                     seq.addAction(actionDef.getAction());
 
                 // if actor has a target page, make it a button that links to said page
-                if (!actorDef.targetPage.equals("")) {
+                if (!"".equals(actorDef.targetPage)) {
 
                     // disable actor touch until after other actions have completed
                     actor.setTouchable(Touchable.disabled);

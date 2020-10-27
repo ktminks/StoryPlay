@@ -99,16 +99,16 @@ public class ActionDef {
     public Table getParamControls(Skin skin) {
         int pCount = 1;
         boolean hasInterp = false;
-        String[] paramLabels = new String[] {"duration:"};
+        String[] paramLabels = new String[] {"Duration:"};
         switch (type) {
             case FadeIn:
             case FadeOut:
-                paramLabels = new String[] {"delay:", "duration:"};
+                paramLabels = new String[] {"Delay:", "Duration:"};
                 pCount = 2;
                 hasInterp = true;
                 break;
             case MoveTo:
-                paramLabels = new String[] {"delay:", "x:", "y:", "duration:"};
+                paramLabels = new String[] {"Delay:", "X:", "Y:", "Duration:"};
                 pCount = 4;
                 hasInterp = true;
                 break;

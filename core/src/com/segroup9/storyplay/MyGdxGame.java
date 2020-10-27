@@ -42,7 +42,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	DesignerToolsTable desToolsTbl;
 	Dialog pgNameDlg, pgNarrationDlg, actionsDlg;
 	TextArea narrationTA;
-	TextField pgNameTF, targetPageTF;
+	TextField pgNameTF, targetPageTF, actorTextTF;
 	List<ActionDef> actionsList;
 	SelectBox<ActionDef.ActionType> actionTypeSB;
 
@@ -195,6 +195,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					actorDef.targetPage = targetPageTF.getText();
 				}
 			});
+			actorTextTF = new TextField("", skin);
+			actorTextTF.addCaptureListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					StoryActorDef actorDef = ((StoryActorDef)selectedActor.getUserObject());
+					actorDef.text = actorTextTF.getText();
+					if (selectedActor instanceof Label)
+						((Label)selectedActor).setText(actorTextTF.getText());
+				}
+			});
 			actionParamsTbl = new Table();
 
 			// layout the controls created above
@@ -208,10 +218,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			t.add(actionsAdd);
 			t.add(actionsRemove);
 			t.row().expandX().fill().pad(2);
-			t.align(Align.right);
+			Label lbl = new Label("Target Page:", skin);
+			lbl.setAlignment(Align.right);
+			t.add(lbl);
 			t.add(targetPageTF);
 			t.row().expandX().fill().pad(2);
-			Label lbl = new Label("ActionType:", skin);
+			lbl = new Label("Actor Text:", skin);
+			lbl.setAlignment(Align.right);
+			t.add(lbl);
+			t.add(actorTextTF);
+			t.row().expandX().fill().pad(2);
+			lbl = new Label("Action Type:", skin);
 			lbl.setAlignment(Align.right);
 			t.add(lbl);
 			t.add(actionTypeSB);
@@ -346,6 +363,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					if (actorDef != null) {
 						actionsList.setItems(actorDef.actionDefs);
 						targetPageTF.setText(actorDef.targetPage);
+						actorTextTF.setText(actorDef.text);
 					}
 					actionsDlg.show(stage);
 					actionsDlg.setSize(0.8f * Gdx.graphics.getWidth(), 0.8f * Gdx.graphics.getHeight());
@@ -427,7 +445,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			stage.screenToStageCoordinates(downPt.set(screenX, screenY));
 			selectedActor = stage.hit(downPt.x, downPt.y, true);
 			if (selectedActor != null) {
-				if (selectedActor.getParent() != storyPlay) // only move our actors
+				if (!selectedActor.isDescendantOf(storyPlay)) // only move our actors
 					selectedActor = null;
 				else {
 					tmpColor.set(selectedActor.getColor());
