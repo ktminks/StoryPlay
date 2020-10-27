@@ -42,9 +42,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	DesignerToolsTable desToolsTbl;
 	Dialog pgNameDlg, pgNarrationDlg, actionsDlg;
 	TextArea narrationTA;
-	TextField pgNameTF, targetPageTF;
+	TextField pgNameTF, targetPageTF, actorTextTF;
 	List<ActionDef> actionsList;
 	SelectBox<ActionDef.ActionType> actionTypeSB;
+
+	Dialog exitDlg;
+	private boolean canExit = false;
 
 	@Override
 	public void create () {
@@ -192,6 +195,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					actorDef.targetPage = targetPageTF.getText();
 				}
 			});
+			actorTextTF = new TextField("", skin);
+			actorTextTF.addCaptureListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					StoryActorDef actorDef = ((StoryActorDef)selectedActor.getUserObject());
+					actorDef.text = actorTextTF.getText();
+					if (selectedActor instanceof Label)
+						((Label)selectedActor).setText(actorTextTF.getText());
+				}
+			});
 			actionParamsTbl = new Table();
 
 			// layout the controls created above
@@ -205,15 +218,52 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			t.add(actionsAdd);
 			t.add(actionsRemove);
 			t.row().expandX().fill().pad(2);
-			t.align(Align.right);
+			Label lbl = new Label("Target Page:", skin);
+			lbl.setAlignment(Align.right);
+			t.add(lbl);
 			t.add(targetPageTF);
 			t.row().expandX().fill().pad(2);
-			Label lbl = new Label("ActionType:", skin);
+			lbl = new Label("Actor Text:", skin);
+			lbl.setAlignment(Align.right);
+			t.add(lbl);
+			t.add(actorTextTF);
+			t.row().expandX().fill().pad(2);
+			lbl = new Label("Action Type:", skin);
 			lbl.setAlignment(Align.right);
 			t.add(lbl);
 			t.add(actionTypeSB);
 			t.row().colspan(2);
 			t.add(actionParamsTbl);
+
+			exitDlg = new Dialog("Save to file and exit?", skin);
+			TextButton saveButton = new TextButton("Save", skin);
+			saveButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					storyPlay.saveToFile();
+					canExit = true;
+					Gdx.app.exit();
+				}
+			});
+			exitDlg.getButtonTable().add(saveButton);
+			TextButton exitButton = new TextButton("Don't Save", skin);
+			exitButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					canExit = true;
+					Gdx.app.exit();
+				}
+			});
+			exitDlg.getButtonTable().add(exitButton);
+			TextButton cancelButton = new TextButton("Cancel", skin);
+			cancelButton.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					exitDlg.hide();
+					Gdx.input.setInputProcessor(MyGdxGame.this);
+				}
+			});
+			exitDlg.getButtonTable().add(cancelButton);
 		}
 	}
 
@@ -241,11 +291,18 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public void dispose () {
-		storyPlay.saveToFile();
-
 		// cleanup
 		stage.dispose();
 		atlas.dispose();
+	}
+
+	public boolean canExit() {
+		return canExit;
+	}
+
+	public void tryExit() {
+		actionsDlg.setModal(true);
+		exitDlg.show(stage);
 	}
 
 	@Override
@@ -253,7 +310,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		if (designerMode) {
 			// play/stop storyplay from current page
-			if (keycode == Input.Keys.P) {
+			if (keycode == Input.Keys.SPACE) {
 				if (!storyPlay.isLive()) {
 					storyPlay.saveCurrentPage();	// save page before playing
 					desToolsTbl.setVisible(false);	// hide dev ui when playing
@@ -300,12 +357,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			if (selectedActor != null) {
 
 				// open dialog to edit actions for selected actor
-				if (keycode == Input.Keys.L) {
+				if (keycode == Input.Keys.P) {
 					actionsList.clearItems();
 					StoryActorDef actorDef = ((StoryActorDef)selectedActor.getUserObject());
 					if (actorDef != null) {
 						actionsList.setItems(actorDef.actionDefs);
 						targetPageTF.setText(actorDef.targetPage);
+						actorTextTF.setText(actorDef.text);
 					}
 					actionsDlg.show(stage);
 					actionsDlg.setSize(0.8f * Gdx.graphics.getWidth(), 0.8f * Gdx.graphics.getHeight());
@@ -387,7 +445,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			stage.screenToStageCoordinates(downPt.set(screenX, screenY));
 			selectedActor = stage.hit(downPt.x, downPt.y, true);
 			if (selectedActor != null) {
-				if (selectedActor.getParent() != storyPlay) // only move our actors
+				if (!selectedActor.isDescendantOf(storyPlay)) // only move our actors
 					selectedActor = null;
 				else {
 					tmpColor.set(selectedActor.getColor());

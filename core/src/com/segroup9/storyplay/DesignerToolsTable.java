@@ -119,12 +119,12 @@ public class DesignerToolsTable extends Table {
                 "F: Flip actor horizontally\n" +
                 "X: Delete selected actor\n" +
                 "[,]: Shift draw order of selected actor\n" +
-                "L: Edit selected actor's actions\n" +
+                "P: Edit selected actor's properties\n" +
                 "MouseWheel: Scroll through available actors\n" +
                 "Left Click: Select actor on stage\n" +
                 "N: Edit page name\n" +
                 "M: Edit page narration text\n" +
-                "P: Play from storyplay current page\n" +
+                "<spacebar>: Play from storyplay current page\n" +
                 "H: Hide/Show this help menu", skin);
         helpLbl.setTouchable(Touchable.disabled);
         row().bottom().left().expandY();

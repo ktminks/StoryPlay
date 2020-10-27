@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class StoryActorDef {
     String imageName;
+    String text;
     float posX, posY, rotation, scale;
     String targetPage = "";
     Array<ActionDef> actionDefs = new Array<>();

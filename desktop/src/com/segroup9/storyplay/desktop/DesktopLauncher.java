@@ -10,6 +10,15 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 800;
 		config.forceExit = false;
-		new LwjglApplication(new MyGdxGame(), config);
+		new LwjglApplication(new MyGdxGame(), config) {
+			@Override
+			public void exit()
+			{
+				MyGdxGame game = ((MyGdxGame)getApplicationListener());
+				if (game.canExit())
+					super.exit();
+				game.tryExit();
+			}
+		};
 	}
 }
